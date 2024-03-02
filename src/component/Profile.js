@@ -10,6 +10,8 @@ import { launchImageLibrary } from 'react-native-image-picker';
 const homeIcon = require('../../assets/icons/back.png');
 const cabperson2 = require('../../Images/cabperson1.jpg');
 
+const BACKEND_URL = process.env.BACKEND_URL
+
 const Profile = () => {
     const { user } = useUser();
     const navigation = useNavigation();
@@ -54,7 +56,7 @@ const Profile = () => {
                     console.log('No phone number available');
                     return;
                 }
-                const response = await fetch(`http://192.168.1.14:5000/api/drivers/profile/${user.phoneNumber}`, {
+                const response = await fetch(BACKEND_URL + `/api/drivers/profile/${user.phoneNumber}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image, Alert } from 'react-native';const cabregisterlogo = require('../../Images/drivecab.png');
 import { useUser } from '../static_component/usercontext';
+const BACKEND_URL = process.env.BACKEND_URL
 
 const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
@@ -23,7 +24,7 @@ const Login = ({ navigation }) => {
     };
 
     try {
-      const response = await fetch('http://api.lsdriver.co.in/api/drivers/login', {
+      const response = await fetch(BACKEND_URL + '/api/drivers/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

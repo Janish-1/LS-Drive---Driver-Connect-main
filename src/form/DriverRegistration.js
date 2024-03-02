@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput,Image,  Button, StyleSheet, SafeAreaView, TouchableOpacity, Text, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 const cabregisterlogo = require('../../Images/drivecab.png');
-
+const BACKEND_URL = process.env.BACKEND_URL
 
 const RadioOption = ({ label, selected, onSelect }) => {
   return (
@@ -44,7 +44,7 @@ const DriverRegistration = () => {
     };
 
     try {
-      const response = await fetch('http://api.lsdriver.co.in/api/drivers/register',{
+      const response = await fetch(BACKEND_URL + '/api/drivers/register',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
