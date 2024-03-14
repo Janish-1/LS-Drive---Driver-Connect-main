@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, TextInput,Image,  Button, StyleSheet, SafeAreaView, TouchableOpacity, Text, ScrollView, Alert } from 'react-native';
+import { View, TextInput, Image, Button, StyleSheet, SafeAreaView, TouchableOpacity, Text, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 const cabregisterlogo = require('../../Images/drivecab.png');
-const BACKEND_URL = process.env.BACKEND_URL
 
 const RadioOption = ({ label, selected, onSelect }) => {
   return (
@@ -17,6 +16,7 @@ const RadioOption = ({ label, selected, onSelect }) => {
 
 const DriverRegistration = () => {
   const navigation = useNavigation();
+  const [username, setusername] = useState('');
   const [fullName, setFullName] = useState('');
   const [address, setAddress] = useState('');
   const [Phonenumber, setPhonenumber] = useState('');
@@ -30,21 +30,23 @@ const DriverRegistration = () => {
 
 
   const handleSignUp = async () => {
-   
+
     const driverData = {
-      fullName,
+      username,
+      full_name: fullName,
       address,
       email,
-      Phonenumber,
-      password, 
+      phone_number: Phonenumber,
+      password,
       adhaarId,
-      birthdate, 
+      birthdate,
       eligible,
       available,
+      user_type: "driver",
     };
 
     try {
-      const response = await fetch(BACKEND_URL + '/api/drivers/register',{
+      const response = await fetch('http://lsdrivebackend.ramo.co.in/api/driver/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +66,7 @@ const DriverRegistration = () => {
       navigation.navigate('Login');
 
     } catch (error) {
-      Alert.alert("Error", error.message);
+      Alert.alert("Error Message", error.message);
     }
   };
 
@@ -72,19 +74,26 @@ const DriverRegistration = () => {
 
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-      <View style={styles.headercontainer}>
-      <TouchableOpacity style={styles.header}>
-        <Image
-          source={cabregisterlogo}
-          style={styles.headerImage}
-        />
-      </TouchableOpacity>
-      <View style={styles.Headertextdiv}>
-      <Text style={styles.titleText}>DriverGo App</Text>
-      <Text style={styles.subtitleText}>Find your way easily with DriverGo.</Text>
-      </View>
-      </View>
+        <View style={styles.headercontainer}>
+          <TouchableOpacity style={styles.header}>
+            <Image
+              source={cabregisterlogo}
+              style={styles.headerImage}
+            />
+          </TouchableOpacity>
+          <View style={styles.Headertextdiv}>
+            <Text style={styles.titleText}>DriverGo App</Text>
+            <Text style={styles.subtitleText}>Find your way easily with DriverGo.</Text>
+          </View>
+        </View>
         <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            value={username}
+            placeholderTextColor='#A9A9A9'
+            onChangeText={setusername}
+          />
           <TextInput
             style={styles.input}
             placeholder="Full Name"
@@ -161,9 +170,9 @@ const DriverRegistration = () => {
 };
 
 const styles = StyleSheet.create({
-  headercontainer:{
-    backgroundColor:'#357EC7',
-    paddingBottom:50
+  headercontainer: {
+    backgroundColor: '#357EC7',
+    paddingBottom: 50
   },
   Headertextdiv: {
     alignItems: 'center',
@@ -173,7 +182,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     marginTop: -40, // Adjust to your screen
-    color:'black',
+    color: 'black',
   },
   subtitleText: {
     fontSize: 16,
@@ -189,10 +198,10 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     padding: 10,
-    },
+  },
   headerImage: {
-    width: '40%', 
-    resizeMode: 'contain', 
+    width: '40%',
+    resizeMode: 'contain',
   },
   headerText: {
     fontSize: 24,

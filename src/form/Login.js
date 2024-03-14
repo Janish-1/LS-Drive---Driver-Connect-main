@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image, Alert } from 'react-native';const cabregisterlogo = require('../../Images/drivecab.png');
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image, Alert } from 'react-native'; const cabregisterlogo = require('../../Images/drivecab.png');
 import { useUser } from '../static_component/usercontext';
-const BACKEND_URL = process.env.BACKEND_URL
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [Phonenumber, setPhoneNumber] = useState('');
+  const [username, setusername] = useState('');
   const { updateUser } = useUser();
 
   const navigateTosignup = () => {
     navigation.navigate('DriverRegistration');
   };
   const navigateToLogin = async () => {
-    if (Phonenumber.trim() === '' || password.trim() === '') {
+    if (username.trim() === '' || password.trim() === '') {
       Alert.alert('Missing Information', 'Please enter both mobile number and password.');
       return;
     }
-   
+
     const loginData = {
-      Phonenumber: Phonenumber.trim(), 
+      username: username.trim(),
       password: password.trim(),
     };
 
     try {
-      const response = await fetch(BACKEND_URL + '/api/drivers/login', {
+      const response = await fetch('http://lsdrivebackend.ramo.co.in/api/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,9 +33,13 @@ const Login = ({ navigation }) => {
       });
 
       if (response.ok) {
-        const json = await response.json();
+        const responseData = await response.json();
+        const { user_id } = responseData.main;
+        console.log("User ID:",user_id);
+        // Store user_id in AsyncStorage
+        await AsyncStorage.setItem('driver', user_id.toString());
         setIsModalVisible(true);
-        updateUser({ phoneNumber: Phonenumber });
+        updateUser({ username: username });
       } else {
         const json = await response.json();
         console.log('Login failed response:', json);
@@ -49,43 +53,43 @@ const Login = ({ navigation }) => {
 
 
   return (
-      <View style={styles.centeredContainer}>
-        <View style={styles.headercontainer}>
-      <TouchableOpacity style={styles.header}>
-        <Image
-          source={cabregisterlogo}
-          style={styles.headerImage}
-        />
-      </TouchableOpacity>
-      <View style={styles.Headertextdiv}>
-      <Text style={styles.titleText}>DriverGo App</Text>
-      <Text style={styles.subtitleText}>Find your way easily with DriverGo.</Text>
-      </View>
-      </View>
-        <View style={styles.container}>
-          <Text style={styles.heading}>Mobile</Text>
-          <TextInput
-            placeholder="Enter your mobile number"
-            placeholderTextColor='#A9A9A9'
-            value={Phonenumber}
-            onChangeText={setPhoneNumber}
-            style={styles.input}
+    <View style={styles.centeredContainer}>
+      <View style={styles.headercontainer}>
+        <TouchableOpacity style={styles.header}>
+          <Image
+            source={cabregisterlogo}
+            style={styles.headerImage}
           />
-          <Text style={styles.heading}>Password</Text>
-          <TextInput
-            placeholder="Enter your password"
-            value={password}
-            placeholderTextColor='#A9A9A9'
-            onChangeText={setPassword}
-            secureTextEntry
-            style={styles.input}
-          />
-          <Text style={styles.forgotPassword}>Forget Password?</Text>
-          <Text style={styles.haveaccount} onPress={navigateTosignup}>Dont have account Signup!</Text>
-          <TouchableOpacity style={styles.button} onPress={navigateToLogin}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
+        </TouchableOpacity>
+        <View style={styles.Headertextdiv}>
+          <Text style={styles.titleText}>DriverGo App</Text>
+          <Text style={styles.subtitleText}>Find your way easily with DriverGo.</Text>
         </View>
+      </View>
+      <View style={styles.container}>
+        <Text style={styles.heading}>Username</Text>
+        <TextInput
+          placeholder="Enter your username"
+          placeholderTextColor='#A9A9A9'
+          value={username}
+          onChangeText={setusername}
+          style={styles.input}
+        />
+        <Text style={styles.heading}>Password</Text>
+        <TextInput
+          placeholder="Enter your password"
+          value={password}
+          placeholderTextColor='#A9A9A9'
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+        <Text style={styles.forgotPassword}>Forget Password?</Text>
+        <Text style={styles.haveaccount} onPress={navigateTosignup}>Dont have account Signup!</Text>
+        <TouchableOpacity style={styles.button} onPress={navigateToLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+      </View>
       <Modal
         animationType="slide"
         transparent={true}
@@ -97,24 +101,24 @@ const Login = ({ navigation }) => {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Welcome! to Driveme {'\n'} {'\n'}Your journey to effortless travel begins here.</Text>
             <TouchableOpacity
-               style={[styles.button, styles.buttonClose]}
+              style={[styles.button, styles.buttonClose]}
               onPress={() => {
                 setIsModalVisible(!isModalVisible);
                 navigation.navigate('Home'); // Navigate after closing the modal
               }}>
-              <Text style={{color:'white'}}>Go to Home</Text>
+              <Text style={{ color: 'white' }}>Go to Home</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  headercontainer:{
-    backgroundColor:'#357EC7',
-    paddingBottom:50
+  headercontainer: {
+    backgroundColor: '#357EC7',
+    paddingBottom: 50
   },
   Headertextdiv: {
     alignItems: 'center',
@@ -124,7 +128,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     marginTop: -40, // Adjust to your screen
-    color:'black',
+    color: 'black',
   },
   subtitleText: {
     fontSize: 16,
@@ -140,10 +144,10 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     padding: 10,
-    },
+  },
   headerImage: {
-    width: '40%', 
-    resizeMode: 'contain', 
+    width: '40%',
+    resizeMode: 'contain',
   },
   container: {
     width: '100%',
@@ -168,7 +172,7 @@ const styles = StyleSheet.create({
     color: 'black',
     marginBottom: 5,
   },
-  haveaccount: { 
+  haveaccount: {
     textAlign: 'right',
     color: '#6495ED',
     fontSize: 14, // Adjusted from '10px' to a numeric value
@@ -194,8 +198,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
-},
-modalView: {
+  },
+  modalView: {
     margin: 20,
     backgroundColor: "#E6E6FA",
     borderRadius: 20,
@@ -203,18 +207,18 @@ modalView: {
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
-        width: 0,
-        height: 2
+      width: 0,
+      height: 2
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5
-},
-modalText: {
+  },
+  modalText: {
     marginBottom: 15,
     textAlign: "center",
-    color:'black',
-},
+    color: 'black',
+  },
 });
 
 export default Login;
