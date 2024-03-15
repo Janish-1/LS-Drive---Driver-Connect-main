@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image, Alert } from 'react-native'; const cabregisterlogo = require('../../Images/drivecab.png');
 import { useUser } from '../static_component/usercontext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {API_URL} from '@env';
 
 const Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
@@ -24,7 +25,7 @@ const Login = ({ navigation }) => {
     };
 
     try {
-      const response = await fetch('http://lsdrivebackend.ramo.co.in/api/login/', {
+      const response = await fetch(`${API_URL}/api/login/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

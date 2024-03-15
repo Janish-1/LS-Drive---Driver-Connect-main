@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Image, Button, StyleSheet, SafeAreaView, TouchableOpacity, Text, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 const cabregisterlogo = require('../../Images/drivecab.png');
+import {API_URL} from '@env';
 
 const RadioOption = ({ label, selected, onSelect }) => {
   return (
@@ -46,7 +47,7 @@ const DriverRegistration = () => {
     };
 
     try {
-      const response = await fetch('http://lsdrivebackend.ramo.co.in/api/driver/', {
+      const response = await fetch(`${API_URL}/api/driver/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

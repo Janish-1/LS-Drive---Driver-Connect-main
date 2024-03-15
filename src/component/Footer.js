@@ -32,7 +32,7 @@ const Footer = () => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconWrap} onPress={() => navigation.navigate('Searchdriver')}>
           <Image source={searchIcon} style={iconStyle('Searchdriver')} />
-          <Text style={isActive('Searchdriver') ? styles.activeText : styles.inactiveText}>Search</Text>
+          <Text style={isActive('Searchdriver') ? styles.activeText : styles.inactiveText}>Active Rides</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconWrap} onPress={() => navigation.navigate('NotificationsPage')}>
           <Image source={bellIcon} style={iconStyle('NotificationsPage')} />

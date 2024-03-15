@@ -10,6 +10,7 @@ const cabperson1 = require('../../Images/cabperson.jpg'); // Ensure these images
 const cabperson2 = require('../../Images/cabperson1.jpg');
 const cabperson3 = require('../../Images/cabperson2.jpg');
 const tickmark = require('../../Images/cabperson2.jpg');
+import { API_URL } from '@env';
 
 const statesOfIndia = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar",
@@ -75,7 +76,8 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://lsdrivebackend.ramo.co.in/api/get-nearby-user/19/');
+        const value = await AsyncStorage.getItem('driver');
+        const response = await fetch(`${API_URL}/api/get-nearby-user/${value}/`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -87,6 +89,13 @@ const Home = ({ navigation }) => {
     };
 
     fetchData();
+
+    // Set up interval to fetch data every 3 seconds
+    const intervalId = setInterval(fetchData, 3000);
+
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
+
   }, []);
 
   const handleSelectUser = (user) => {
@@ -106,34 +115,33 @@ const Home = ({ navigation }) => {
       console.log('Booking confirmed for:', user.location.full_name);
       const id = user.location.user_id;
       const driver = await AsyncStorage.getItem('driver');
-      
+
       // Prepare the data payload
       const data = {
         driver_id: driver, // Assuming the driver_id is constant
         status: 2 // Assuming status 2 indicates the booking is accepted
       };
-  
+
       // Make the POST request to update the driver's status
-      const response = await fetch('https://lsdrivebackend.ramo.co.in/api/accpet-from-driver/' + id, {
+      const response = await fetch(`${API_URL}/api/accpet-from-driver/` + id, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       });
-  
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+
       // Assuming you don't need to update the users data after confirming booking
       console.log('Booking confirmed successfully');
-      fetchdata();
     } catch (error) {
       console.error('Error confirming booking:', error);
     }
   };
-  
+
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleSelectUser(item)}>
       <View style={styles.item}>
