@@ -3,12 +3,14 @@ import { SafeAreaView, View, TextInput, FlatList, Text, TouchableOpacity, Image,
 import Footer from '../component/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '@env';
+import { useColorScheme } from 'react-native';
 
 const Searchdriver = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activerides, setActiverides] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedRide, setSelectedRide] = useState(null);
+  const colorScheme = useColorScheme();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,12 +79,12 @@ const Searchdriver = () => {
   const renderRideItem = ({ item }) => (
     <TouchableOpacity onPress={() => openModal(item)} style={styles.item}>
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>User Name:{item.username}</Text>
-        <Text style={styles.location}>Phone Number: {item.phone_number}</Text>
-        <Text style={styles.address} numberOfLines={2}>Pickup Address: {item.pickup_address}</Text>
-        <Text style={styles.address} numberOfLines={2}>Destination Address: {item.destination_address}</Text>
-        <Text style={styles.additionalInfo}>People Count: {item.people_count}</Text>
-        <Text style={styles.additionalInfo}>Pickup Time: {item.pickup_time}</Text>
+        <Text style={[styles.name, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>User Name:{item.username}</Text>
+        <Text style={[styles.location, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Phone Number: {item.phone_number}</Text>
+        <Text style={[styles.address, { color: colorScheme === 'dark' ? 'black' : 'black' }]} numberOfLines={2}>Pickup Address: {item.pickup_address}</Text>
+        <Text style={[styles.address, { color: colorScheme === 'dark' ? 'black' : 'black' }]} numberOfLines={2}>Destination Address: {item.destination_address}</Text>
+        <Text style={[styles.additionalInfo, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>People Count: {item.people_count}</Text>
+        <Text style={[styles.additionalInfo, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Pickup Time: {item.pickup_time}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -102,12 +104,12 @@ const Searchdriver = () => {
             </TouchableOpacity>
             <View style={styles.modalInfoContainer}>
               {/* Display all ride details here */}
-              <Text style={styles.modalInfo}>Name: {selectedRide.username}</Text>
-              <Text style={styles.modalInfo}>Phone Number: {selectedRide.phone_number}</Text>
-              <Text style={styles.modalInfo}>Pickup Address: {selectedRide.pickup_address}</Text>
-              <Text style={styles.modalInfo}>Destination Address: {selectedRide.destination_address}</Text>
-              <Text style={styles.modalInfo}>People Count: {selectedRide.people_count}</Text>
-              <Text style={styles.modalInfo}>Pickup Time: {selectedRide.pickup_time}</Text>
+              <Text style={[styles.modalInfo, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Name: {selectedRide.username}</Text>
+              <Text style={[styles.modalInfo, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Phone Number: {selectedRide.phone_number}</Text>
+              <Text style={[styles.modalInfo, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Pickup Address: {selectedRide.pickup_address}</Text>
+              <Text style={[styles.modalInfo, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Destination Address: {selectedRide.destination_address}</Text>
+              <Text style={[styles.modalInfo, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>People Count: {selectedRide.people_count}</Text>
+              <Text style={[styles.modalInfo, { color: colorScheme === 'dark' ? 'black' : 'black' }]}>Pickup Time: {selectedRide.pickup_time}</Text>
             </View>
             <TouchableOpacity onPress={() => handleEndRide(selectedRide.id)} style={styles.endRideButton}>
               <Text style={styles.nextButton}>End Ride</Text>
@@ -122,11 +124,11 @@ const Searchdriver = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TextInput
-          style={styles.searchBar}
+          style={[styles.searchBar, { color: colorScheme === 'dark' ? 'black' : 'black' }]}
           value={searchQuery}
           onChangeText={handleSearch}
           placeholder="Search Rides"
-          placeholderTextColor="#808080"
+          placeholderTextColor="black"
           clearButtonMode="always"
         />
       </View>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image, Alert } from 'react-native'; const cabregisterlogo = require('../../Images/drivecab.png');
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image, Alert, ScrollView } from 'react-native'; 
+const cabregisterlogo = require('../../Images/drivecab.png');
 import { useUser } from '../static_component/usercontext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {API_URL} from '@env';
@@ -54,6 +55,7 @@ const Login = ({ navigation }) => {
 
 
   return (
+    <ScrollView>
     <View style={styles.centeredContainer}>
       <View style={styles.headercontainer}>
         <TouchableOpacity style={styles.header}>
@@ -113,6 +115,7 @@ const Login = ({ navigation }) => {
         </View>
       </Modal>
     </View>
+    </ScrollView>
   );
 };
 

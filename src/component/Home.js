@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, FlatList, StyleSheet, KeyboardAvoidingView, Platform, Alert, TouchableOpacity
+  View, Text, FlatList, StyleSheet, KeyboardAvoidingView, Platform, Alert, TouchableOpacity, ScrollView
 } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Footer from './Footer';
@@ -11,67 +11,13 @@ const cabperson2 = require('../../Images/cabperson1.jpg');
 const cabperson3 = require('../../Images/cabperson2.jpg');
 const tickmark = require('../../Images/cabperson2.jpg');
 import { API_URL } from '@env';
-
-const statesOfIndia = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar",
-  "Chhattisgarh", "Goa", "Gujarat", "Haryana",
-];
-
-const DATA = [
-  {
-    id: '1',
-    name: 'Wade Wagner',
-    location: 'Rhode Island',
-    image: cabperson1,
-  },
-  {
-    id: '2',
-    name: 'John Wade',
-    location: 'Massachusetts',
-    image: cabperson2,
-  },
-  {
-    id: '3',
-    name: 'Oldman Wade',
-    location: 'Tennessee',
-    image: cabperson3,
-  },
-  {
-    id: '4',
-    name: 'John Wade',
-    location: 'Massachusetts',
-    image: cabperson2,
-  },
-  {
-    id: '5',
-    name: 'Oldman Wade',
-    location: 'Tennessee',
-    image: cabperson3,
-  },
-  {
-    id: '6',
-    name: 'Oldman Wade',
-    location: 'Tennessee',
-    image: cabperson3,
-  },
-  {
-    id: '7',
-    name: 'Oldman Wade',
-    location: 'Tennessee',
-    image: cabperson3,
-  },
-  {
-    id: '8',
-    name: 'Oldman Wade',
-    location: 'Tennessee',
-    image: cabperson3,
-  },
-];
+import { useColorScheme } from 'react-native';
 
 const Home = ({ navigation }) => {
   const [users, setusers] = useState([]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const GOOGLE_API_KEY = 'AIzaSyBJvvPvzCPEAaTa2abV448G_aYJPgDz0-c';
+  const colorScheme = useColorScheme();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -168,6 +114,7 @@ const Home = ({ navigation }) => {
               // 'details' is provided when fetchDetails = true
               console.log(data, details);
             }}
+            textInputProps={{ placeholderTextColor: colorScheme === 'dark' ? 'black' : 'black' }}
             query={{
               key: GOOGLE_API_KEY,
               language: 'en',
@@ -188,14 +135,16 @@ const Home = ({ navigation }) => {
           <Text style={styles.listTitle}>
             Users requested for drive
           </Text>
-          <View style={styles.driversList}>
-            <FlatList
-              data={users}
-              renderItem={renderItem}
-              keyExtractor={item => item.location.user_id.toString()}
-              ListEmptyComponent={<Text style={styles.noResult}>No Requests found.</Text>}
-            />
-          </View>
+          <ScrollView>
+            <View style={styles.driversList}>
+              <FlatList
+                data={users}
+                renderItem={renderItem}
+                keyExtractor={item => item.location.user_id.toString()}
+                ListEmptyComponent={<Text style={styles.noResult}>No Requests found.</Text>}
+              />
+            </View>
+          </ScrollView>
         </View>
       </KeyboardAvoidingView>
 
@@ -230,7 +179,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    color: '#000',
+    color: 'black',
   },
   iconButton: {
     padding: 10,

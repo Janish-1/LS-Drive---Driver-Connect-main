@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import Footer from './Footer';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../static_component/usercontext';
@@ -65,7 +65,7 @@ const Profile = () => {
                 if (!response.ok) {
                     throw new Error('Profile data fetch failed');
                 }
-               
+
                 const data = await response.json();
                 if (data && data.profile) {
                     setUserData({
@@ -105,7 +105,7 @@ const Profile = () => {
                 },
                 body: formData,
             });
-            console.log("formdata",formData)
+            console.log("formdata", formData)
             if (response.ok) {
                 console.log("Image updated successfully");
             } else {
@@ -120,70 +120,72 @@ const Profile = () => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.headcont}>
-                <TouchableOpacity style={styles.iconWrap} onPress={() => navigation.navigate('Home')}>
-                    <Image source={homeIcon} style={styles.icon} />
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>Profile</Text>
-            </View>
-            <View style={styles.header}>
-            </View>
-            <View style={styles.profileContainer}>
-                <TouchableOpacity onPress={selectProfilePicture}>
-                    <Image
-                        source={
-                            userData.profileImage
-                                ? { uri: `http://localhost:5000/images/${userData.profileImage}` }
-                                : cabperson2
-                        }
-                        style={styles.profileImage}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnimgset} onPress={updateProfileImage}>
-                    <Text value={userData.id} style={{ color: 'black', textAlign: 'center', margin: 10 }}>Update Profile</Text>
-                </TouchableOpacity>
+            <ScrollView>
+                <View style={styles.headcont}>
+                    <TouchableOpacity style={styles.iconWrap} onPress={() => navigation.navigate('Home')}>
+                        <Image source={homeIcon} style={styles.icon} />
+                    </TouchableOpacity>
+                    <Text style={styles.headerTitle}>Profile</Text>
+                </View>
+                <View style={styles.header}>
+                </View>
+                <View style={styles.profileContainer}>
+                    <TouchableOpacity onPress={selectProfilePicture}>
+                        <Image
+                            source={
+                                userData.profileImage
+                                    ? { uri: `http://localhost:5000/images/${userData.profileImage}` }
+                                    : cabperson2
+                            }
+                            style={styles.profileImage}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btnimgset} onPress={updateProfileImage}>
+                        <Text value={userData.id} style={{ color: 'black', textAlign: 'center', margin: 10 }}>Update Profile</Text>
+                    </TouchableOpacity>
 
-                <View style={styles.infoContainer}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>Username :</Text>
-                    <TextInput
-                        placeholder="Full name"
-                        value={userData.fullName}
-                        style={styles.input}
-                        placeholderTextColor='#808080'
-                    />
+                    <View style={styles.infoContainer}>
+                        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>Username :</Text>
+                        <TextInput
+                            placeholder="Full name"
+                            value={userData.fullName}
+                            style={styles.input}
+                            placeholderTextColor='#808080'
+                        />
+                    </View>
+                    <View style={styles.infoContainer}>
+                        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>Address :</Text>
+                        <TextInput
+                            placeholder="Address"
+                            value={userData.address}
+                            style={styles.input}
+                            placeholderTextColor='#808080'
+                        />
+                    </View>
+                    <View style={styles.infoContainer} key={userData.phoneNumber}>
+                        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>Phone-Number :</Text>
+                        <TextInput
+                            placeholder="PhoneNumber"
+                            value={userData.phoneNumber}
+                            onChangeText={(text) => setUserData({ ...userData, phoneNumber: text })}
+                            style={styles.input}
+                            placeholderTextColor='#808080'
+                        />
+                    </View>
+                    <View style={styles.infoContainer}>
+                        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>Email :</Text>
+                        <TextInput
+                            placeholder="Gmail Account"
+                            value={userData.email}
+                            style={styles.input}
+                            placeholderTextColor='#808080'
+                        />
+                    </View>
+                    <TouchableOpacity style={styles.button}>
+                        <Text style={styles.buttonText}>Edit profile</Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.infoContainer}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>Address :</Text>
-                    <TextInput
-                        placeholder="Address"
-                        value={userData.address}
-                        style={styles.input}
-                        placeholderTextColor='#808080'
-                    />
-                </View>
-                <View style={styles.infoContainer} key={userData.phoneNumber}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>Phone-Number :</Text>
-                    <TextInput
-                        placeholder="PhoneNumber"
-                        value={userData.phoneNumber}
-                        onChangeText={(text) => setUserData({ ...userData, phoneNumber: text })}
-                        style={styles.input}
-                        placeholderTextColor='#808080'
-                    />
-                </View>
-                <View style={styles.infoContainer}>
-                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>Email :</Text>
-                    <TextInput
-                        placeholder="Gmail Account"
-                        value={userData.email}
-                        style={styles.input}
-                        placeholderTextColor='#808080'
-                    />
-                </View>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>Edit profile</Text>
-                </TouchableOpacity>
-            </View>
+            </ScrollView>
             <Footer style={styles.footer} />
         </View>
     );
