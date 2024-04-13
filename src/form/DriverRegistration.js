@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 const cabregisterlogo = require('../../Images/drivecab.png');
 import { API_URL } from '@env';
 import DatePicker from 'react-native-date-picker';
-import { useColorScheme } from 'react-native';
 
 const RadioOption = ({ label, selected, onSelect }) => {
   return (
@@ -28,7 +27,6 @@ const DriverRegistration = () => {
   const [eligible, setEligible] = useState(false);
   const [available, setAvailable] = useState(false);
   const [open, setOpen] = useState(false);
-  const colorScheme = useColorScheme();
 
 
   const handleSignUp = async () => {
@@ -175,6 +173,7 @@ const DriverRegistration = () => {
               setBirthdate(selectedDate);
             }}
             onCancel={() => setOpen(false)}
+            placeholderTextColor='black'
           />
         </View>
         <View style={styles.radioGroup}>
@@ -309,6 +308,9 @@ const styles = StyleSheet.create({
     width: '50%',
     alignSelf: 'center',
   },
+  label: {
+    color:'black',
+  }
 });
 
 export default DriverRegistration;

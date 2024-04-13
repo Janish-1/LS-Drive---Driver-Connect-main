@@ -114,7 +114,7 @@ const Home = ({ navigation }) => {
               // 'details' is provided when fetchDetails = true
               console.log(data, details);
             }}
-            textInputProps={{ placeholderTextColor: colorScheme === 'dark' ? 'black' : 'black' }}
+            textInputProps={{ placeholderTextColor: 'black'}}
             query={{
               key: GOOGLE_API_KEY,
               language: 'en',
