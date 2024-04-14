@@ -174,6 +174,7 @@ const DriverRegistration = () => {
             }}
             onCancel={() => setOpen(false)}
             placeholderTextColor='black'
+            theme='auto'
           />
         </View>
         <View style={styles.radioGroup}>

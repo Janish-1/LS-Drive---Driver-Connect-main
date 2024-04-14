@@ -132,14 +132,12 @@ const Searchdriver = () => {
           clearButtonMode="always"
         />
       </View>
-      <ScrollView>
         <FlatList
           data={filteredRides}
           renderItem={renderRideItem}
           keyExtractor={(item) => item.id.toString()}
           ListEmptyComponent={<Text style={styles.noResult}>No rides found.</Text>}
         />
-      </ScrollView>
       <RideDetailsModal />
       <Footer />
     </SafeAreaView>

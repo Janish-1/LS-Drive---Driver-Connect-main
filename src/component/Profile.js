@@ -5,18 +5,18 @@ import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../static_component/usercontext';
 import ImagePicker from 'react-native-image-picker';
 import { launchImageLibrary } from 'react-native-image-picker';
-
+import { API_URL } from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const homeIcon = require('../../assets/icons/back.png');
 const cabperson2 = require('../../Images/cabperson1.jpg');
-
-const BACKEND_URL = process.env.BACKEND_URL
 
 const Profile = () => {
     const { user } = useUser();
     const navigation = useNavigation();
     const [profilePic, setProfilePic] = useState(null);
     const [image, setImage] = useState(null);
+    const [editable, setEditable] = useState(false);
 
     const [userData, setUserData] = useState({
         id: '',
@@ -26,7 +26,6 @@ const Profile = () => {
         email: '',
         profileImage: '',
     });
-
 
     const selectProfilePicture = () => {
         const options = {
@@ -52,29 +51,31 @@ const Profile = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                if (!user.phoneNumber) {
-                    console.log('No phone number available');
+                const driverId = await AsyncStorage.getItem('driver');
+                if (!driverId) {
+                    console.log('No Driver Id available');
                     return;
                 }
-                const response = await fetch(BACKEND_URL + `/api/drivers/profile/${user.phoneNumber}`, {
+                const response = await fetch(API_URL + `/api/driver/${driverId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                 });
+
                 if (!response.ok) {
                     throw new Error('Profile data fetch failed');
                 }
 
                 const data = await response.json();
-                if (data && data.profile) {
+                if (data) {
                     setUserData({
-                        id: data.profile.id,
-                        fullName: data.profile.fullName,
-                        address: data.profile.address,
-                        phoneNumber: data.profile.phoneNumber,
-                        email: data.profile.email,
-                        profileImage: data.profile.profilepic
+                        id: data.id,
+                        fullName: data.full_name,
+                        address: data.address,
+                        phoneNumber: data.phone_number,
+                        email: data.email,
+                        profileImage: data.profile_image,
                     });
                 }
             } catch (error) {
@@ -86,6 +87,7 @@ const Profile = () => {
     }, [user.phoneNumber]);
 
     const updateProfileImage = async () => {
+        const driverId = await AsyncStorage.getItem('driver');
         if (!profilePic) {
             alert("Please select an image first.");
             return;
@@ -98,12 +100,18 @@ const Profile = () => {
         });
         formData.append('userID', userData.id);
         try {
-            const response = await fetch('http://192.168.1.99:5000/api/drivers/updateprofile', {
-                method: 'POST',
+            const response = await fetch(`${API_URL}/api/user/${driverId}`, {
+                method: 'PATCH',
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json',
                 },
-                body: formData,
+                body: JSON.stringify({
+                    full_name: userData.fullName,
+                    email: userData.email,
+                    phone_number: userData.phoneNumber,
+                    address: userData.address,
+                    profile_image: userData.profileImage,
+                }),
             });
             console.log("formdata", formData)
             if (response.ok) {
@@ -117,6 +125,13 @@ const Profile = () => {
         }
     };
 
+    const toggleEdit = () => {
+        setEditable(!editable);
+    };
+
+    const handleInputChange = (key, value) => {
+        setUserData({ ...userData, [key]: value });
+    };
 
     return (
         <View style={styles.container}>
@@ -149,6 +164,8 @@ const Profile = () => {
                         <TextInput
                             placeholder="Full name"
                             value={userData.fullName}
+                            editable={editable}
+                            onChangeText={(text) => handleInputChange('fullName', text)}
                             style={styles.input}
                             placeholderTextColor='#808080'
                         />
@@ -158,6 +175,8 @@ const Profile = () => {
                         <TextInput
                             placeholder="Address"
                             value={userData.address}
+                            editable={editable}
+                            onChangeText={(text) => handleInputChange('address', text)}
                             style={styles.input}
                             placeholderTextColor='#808080'
                         />
@@ -167,7 +186,8 @@ const Profile = () => {
                         <TextInput
                             placeholder="PhoneNumber"
                             value={userData.phoneNumber}
-                            onChangeText={(text) => setUserData({ ...userData, phoneNumber: text })}
+                            editable={editable}
+                            onChangeText={(text) => handleInputChange('phoneNumber', text)}
                             style={styles.input}
                             placeholderTextColor='#808080'
                         />
@@ -177,13 +197,17 @@ const Profile = () => {
                         <TextInput
                             placeholder="Gmail Account"
                             value={userData.email}
+                            editable={editable}
+                            onChangeText={(text) => handleInputChange('email', text)}
                             style={styles.input}
                             placeholderTextColor='#808080'
                         />
                     </View>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Edit profile</Text>
-                    </TouchableOpacity>
+                    {!editable && (
+                        <TouchableOpacity style={styles.button} onPress={toggleEdit}>
+                            <Text style={styles.buttonText}>Edit profile</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             </ScrollView>
             <Footer style={styles.footer} />

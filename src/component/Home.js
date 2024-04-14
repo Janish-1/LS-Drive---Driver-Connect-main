@@ -126,7 +126,7 @@ const Home = ({ navigation }) => {
           />
         </View>
       </View>
-
+  
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.contentContainer}
@@ -135,19 +135,17 @@ const Home = ({ navigation }) => {
           <Text style={styles.listTitle}>
             Users requested for drive
           </Text>
-          <ScrollView>
-            <View style={styles.driversList}>
-              <FlatList
-                data={users}
-                renderItem={renderItem}
-                keyExtractor={item => item.location.user_id.toString()}
-                ListEmptyComponent={<Text style={styles.noResult}>No Requests found.</Text>}
-              />
-            </View>
-          </ScrollView>
+          <View style={styles.driversList}>
+            <FlatList
+              data={users}
+              renderItem={renderItem}
+              keyExtractor={item => item.location.user_id.toString()}
+              ListEmptyComponent={<Text style={styles.noResult}>No Requests found.</Text>}
+            />
+          </View>
         </View>
       </KeyboardAvoidingView>
-
+  
       <Footer navigation={navigation} />
     </View>
   );
